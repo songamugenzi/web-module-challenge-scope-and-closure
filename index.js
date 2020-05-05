@@ -27,18 +27,22 @@ function processFirstItem(stringList, callback) {
  * Study the code for counter1 and counter2. Answer the questions below.
  * 
  * 1. What is the difference between counter1 and counter2?
+ *    counter1 is invoking counterMaker and then setting the count to zero
+ *    counter2 is incrementing the count in counterMaker
  * 
  * 2. Which of the two uses a closure? How can you tell?
+ *    counter1 uses a closure because it is accessing the parent scope of counterMaker 
+ *    after it's been executed 
  * 
  * 3. In what scenario would the counter1 code be preferable? In what scenario would counter2 be better? 
- *
+ *    counter1 would be better if you wanted to make more function declarations but counter2 would better if you wanted to declare more variables outside of the function.  
 */
 
 // counter1 code
 function counterMaker() {
   let count = 0;
   return function counter() {
-    count++;
+    return count++;
   }
 }
 
@@ -56,11 +60,11 @@ function counter2() {
 
 Write a function called `inning` that generates a random number of points that a team scored in an inning. This should be a whole number between 0 and 2. */
 
-function inning(/*Code Here*/){
-
-    /*Code Here*/
-
+function Inning() {
+  let randomNum = Math.floor(Math.random() * 3);
+  return randomNum;
 }
+console.log("task2:", Inning('Winnipeg Jets'))
 
 /* Task 3: finalScore()
 
@@ -74,13 +78,18 @@ finalScore(inning, 9) might return:
   "Away": 5,
 }
 
-*/ 
+*/
 
-function finalScore(/*code Here*/){
-
-  /*Code Here*/
-
+function getInningScore(numInnings, inningFunction) {
+  let homeTeam = 0;
+  let awayTeam = 0;
+  for (let i = 0; i < numInnings; i++) {
+    homeTeam = homeTeam + inningFunction();
+    awayTeam = awayTeam + inningFunction();
+  }
+  return { "Home": homeTeam, "Away": awayTeam };
 }
+console.log("task 3: ", getInningScore(10, Inning));
 
 /* Task 4: 
 
@@ -104,8 +113,15 @@ and returns the score at each pont in the game, like so:
 
 Final Score: awayTeam - homeTeam */
 
-function scoreboard(/* CODE HERE */) {
-  /* CODE HERE */
+function scoreboard(numInnings, getInningScore, Inning) {
+  const results = [];
+  for (let i = 0; i < numInnings; i++) {
+    let inningCount = { "inning": i + 1 };
+    const obj = Object.assign(inningCount, getInningScore(1, Inning));
+    // results.push(`Inning ${obj.inning}: ${obj.Home} - ${obj.Away}`)
+    results.push({ inning: obj.inning, homeScore: obj.Home, awayScore: obj.Away });
+  }
+  return results;
 }
-
+console.log(scoreboard(10, getInningScore, Inning));
 
